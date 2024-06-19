@@ -4,7 +4,7 @@ import { addAgentQuery, verifyAgentQuery } from "../models/queries.js";
 
 import 'dotenv/config';
 
-const secretKey = process.env.JWT_SECRET_KEY;
+const secretKey = process.env.SECRET_KEY;
 
 export const home = (req, res) => {
   res.render("home", {
