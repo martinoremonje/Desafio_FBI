@@ -1,33 +1,27 @@
 import express from 'express';
-import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
-import authRoutes from './routes/authRoute.js';
-import restrictedRoutes from './routes/restrictedRoute.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-dotenv.config();
+import router from './routes/routes.js'
+import { engine } from 'express-handlebars';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.use(bodyParser.json());
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/views', express.static(path.join(__dirname, 'views')));
-app.use('/img', express.static(path.join(__dirname, 'img')));
-
-app.use('/auth', authRoutes);
-app.use('/restricted', restrictedRoutes);
+app.use(express.static('public'));
 
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
-});
+app.engine('hbs', engine({
+    extname: '.hbs',
+}));
+app.set('view engine', 'hbs');
+app.set('views', './views');
 
 
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser())
 
-app.listen(PORT, console.log(`Server on: http://localhost:${PORT}`));
+
+app.use('/', router)
+
+
+app.listen(PORT, () => console.log(`Servidor corriendo en: http://localhost:${PORT}`));
