@@ -9,7 +9,7 @@ export const addAgentQuery = async (nombre, email, contraseña) => {
 
     const result = await pool.query(sql);
     if (result.rowCount > 0) {
-      return { success: true };
+      return result.rows[0];
     } else {
       throw new Error("No se pudo registrar el usuario");
     }
